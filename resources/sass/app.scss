@@ -6,3 +6,15 @@
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+.body{
+    background-color: lightgrey;
+}
+.navbar{
+    background-color: aquamarine;
+    .li{
+        font-size: 20px;
+        font-style: bold;
+        color: black;
+    }
+}
