@@ -1,4 +1,4 @@
-@extends('layouts.default')
+@extends('layouts.sidebar')
 @section('content')
     <h1>About</h1>
     <p>This site is to become a grand codex which dm's and players can use to store and quickly find any homebrew or official D&D data</p>

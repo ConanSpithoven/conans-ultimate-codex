@@ -32,3 +32,6 @@ Route::get('contact', function()
 {
     return View::make('pages.contact');
 });
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
