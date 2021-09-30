@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CreatureController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,10 +21,8 @@ Route::get('/', function()
 {
     return View::make('pages.main');
 });
-Route::get('creatures', function()
-{
-    return View::make('pages.creatures');
-});
+Route::resource('creatures', CreatureController::class);
+
 Route::get('about', function()
 {
     return View::make('pages.about');
