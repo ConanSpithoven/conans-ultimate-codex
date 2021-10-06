@@ -10,6 +10,6 @@ class Creature extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'name'
+        'user_id', 'name', 'size', 'type', 'alignment'
     ];
 }

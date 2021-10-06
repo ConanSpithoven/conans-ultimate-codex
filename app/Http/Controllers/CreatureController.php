@@ -85,7 +85,7 @@ class CreatureController extends Controller
             'name' => 'required',
         ]);
     
-        $post->update($request->all());
+        $creature->update($request->all());
     
         return redirect()->route('creatures.index')
                         ->with('success','Creature updated successfully');
@@ -99,7 +99,7 @@ class CreatureController extends Controller
      */
     public function destroy(Creature $creature)
     {
-        $post->delete();
+        $creature->delete();
     
         return redirect()->route('creatures.index')
                         ->with('success','Creature deleted successfully');

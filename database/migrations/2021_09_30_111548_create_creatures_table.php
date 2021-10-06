@@ -15,22 +15,23 @@ class CreateCreaturesTable extends Migration
     {
         Schema::create('creatures', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id');
-            $table->string('status');
-            $table->string('name');
-            $table->string('size');
-            $table->string('type');
-            $table->string('alignment');
-            $table->string('armor_class');
-            $table->string('hit_points');
-            $table->string('speed');
-            $table->string('stats');
-            $table->string('saving_throws');
-            $table->string('skills');
-            $table->string('Abilities');
-            $table->string('actions');
-            $table->string('reactions');
-            $table->string('legendary_actions');
+            $table->integer('user_id')->default(0);
+            $table->string('status')->default("review");
+            $table->string('name')->default("");
+            $table->string('size')->default("");
+            $table->string('type')->default("");
+            $table->string('alignment')->default("");
+            $table->string('armor_class')->default("0");
+            $table->string('hit_points')->default("0");
+            $table->string('speed')->default("0ft");
+            $table->string('stats')->default("");
+            $table->string('saving_throws')->default("");
+            $table->string('skills')->default("");
+            $table->string('spells')->default("");
+            $table->string('abilities')->default("");
+            $table->string('actions')->default("");
+            $table->string('reactions')->default("");
+            $table->string('legendary_actions')->default("");
             $table->timestamps();
         });
     }
