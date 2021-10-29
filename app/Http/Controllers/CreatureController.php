@@ -14,10 +14,14 @@ class CreatureController extends Controller
      */
     public function index()
     {
+        $data = Creature::where('status', 'review')->get();
+        return view('creatures.index', ['data' => $data]);
+    }
+
+    public function admin()
+    {
         $data = Creature::latest()->paginate(5);
-    
-        return view('creatures.index',compact('data'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+        return view('creatures.admin', compact('data'))->with('i', (request()->input('page', 1) -1) *5);
     }
 
     /**

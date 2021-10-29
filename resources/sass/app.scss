@@ -10,11 +10,24 @@
 .body{
     background-color: lightgrey;
 }
+
+.footer{
+    position: absolute;
+    bottom:0;
+}
+
 .navbar{
+    padding-left: 50px;
     background-color: aquamarine;
-    .li{
+    li{
         font-size: 20px;
         font-style: bold;
         color: black;
+    }
+}
+
+.navbar-fixed-top{
+    li{
+        margin-right: 5px;
     }
 }

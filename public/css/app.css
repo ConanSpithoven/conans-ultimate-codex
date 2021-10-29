@@ -10006,11 +10006,21 @@ h3 {
   background-color: lightgrey;
 }
 
+.footer {
+  position: absolute;
+  bottom: 0;
+}
+
 .navbar {
+  padding-left: 50px;
   background-color: aquamarine;
 }
-.navbar .li {
+.navbar li {
   font-size: 20px;
   font-style: bold;
   color: black;
+}
+
+.navbar-fixed-top li {
+  margin-right: 5px;
 }
