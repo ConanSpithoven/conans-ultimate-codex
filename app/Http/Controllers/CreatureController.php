@@ -12,16 +12,107 @@ class CreatureController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = Creature::where('status', 'review')->get();
-        return view('creatures.index', ['data' => $data]);
+        $action = "list";
+        $types = Creature::select('type')->distinct()->get()->pluck('type');
+        $filter_type = "";
+        if(isset($request->filter_type) && $request->filter_type !== ""){
+            $filter_type = $request->filter_type;
+        }
+        if(isset($request->term) && $request->term !== ""){
+            $search_term = $request->term;
+        } else {
+            $search_term = "Search creatures";
+        }
+        $data = Creature::where([
+            ['status', '=', 'active'],
+            ['name', '!=', Null],
+            [function ($query) use ($request){
+                if(($term = $request->term)) {
+                    $query->orWhere('name', 'LIKE', '%' . $term . '%')->get();
+                    $query->orWhere('type', 'LIKE', '%' . $term . '%')->get();
+                }
+                if(($type = $request->filter_type)){
+                    if($type !== ""){
+                        $query->where('type', '=', $type)->get();
+                    }
+                }
+            }]
+        ])
+            ->orderBy("id", "desc")
+            ->paginate(10);
+        return view('creatures.index', ["data" => $data, "types" => $types, "filter_type" => $filter_type, "action" => $action, "search_term" => $search_term])
+            ->with('i', (request()->input('page', 1) -1) *5);
     }
 
-    public function admin()
+    public function admin(Request $request)
     {
-        $data = Creature::latest()->paginate(5);
-        return view('creatures.admin', compact('data'))->with('i', (request()->input('page', 1) -1) *5);
+        $action = "list";
+        $types = Creature::select('type')->distinct()->get()->pluck('type');
+        $filter_type = "";
+        $term = "";
+        if(isset($request->filter_type) && $request->filter_type !== ""){
+            $filter_type = $request->filter_type;
+        }
+        if(isset($request->term) && $request->term !== ""){
+            $search_term = $request->term;
+        } else {
+            $search_term = "Search creatures";
+        }
+        $data = Creature::where([
+            ['status', '=', 'active'],
+            ['name', '!=', Null],
+            [function ($query) use ($request){
+                if(($term = $request->term)) {
+                    $query->orWhere('name', 'LIKE', '%' . $term . '%')->get();
+                    $query->orWhere('type', 'LIKE', '%' . $term . '%')->get();
+                }
+                if(($type = $request->filter_type)){
+                    if($type !== ""){
+                        $query->where('type', '=', $type)->get();
+                    }
+                }
+            }]
+        ])
+            ->orderBy("id", "desc")
+            ->paginate(10);
+        return view('creatures.admin', ["data" => $data, "types" => $types, "filter_type" => $filter_type, "search_term" => $search_term])
+            ->with('i', (request()->input('page', 1) -1) *5);
+    }
+
+    public function review(Request $request)
+    {
+        $action = "review";
+        $types = Creature::select('type')->distinct()->get()->pluck('type');
+        $filter_type = "";
+        if(isset($request->filter_type) && $request->filter_type !== ""){
+            $filter_type = $request->filter_type;
+        }
+        if(isset($request->term) && $request->term !== ""){
+            $search_term = $request->term;
+        } else {
+            $search_term = "Search creatures";
+        }
+        $data = Creature::where([
+            ['status', '=', 'review'],
+            ['name', '!=', Null],
+            [function ($query) use ($request){
+                if(($term = $request->term)) {
+                    $query->orWhere('name', 'LIKE', '%' . $term . '%')->get();
+                    $query->orWhere('type', 'LIKE', '%' . $term . '%')->get();
+                }
+                if(($type = $request->filter_type)){
+                    if($type !== ""){
+                        $query->where('type', '=', $type)->get();
+                    }
+                }
+            }]
+        ])
+            ->orderBy("id", "desc")
+            ->paginate(10);
+        return view('creatures.index', ["data" => $data, "types" => $types, "filter_type" => $filter_type, "action" => $action, "search_term" => $search_term])
+            ->with('i', (request()->input('page', 1) -1) *5);
     }
 
     /**
@@ -88,10 +179,9 @@ class CreatureController extends Controller
             'user_id' => 'required',
             'name' => 'required',
         ]);
-    
         $creature->update($request->all());
     
-        return redirect()->route('creatures.index')
+        return redirect()->route('creatures.admin')
                         ->with('success','Creature updated successfully');
     }
 
@@ -105,7 +195,7 @@ class CreatureController extends Controller
     {
         $creature->delete();
     
-        return redirect()->route('creatures.index')
+        return redirect()->route('creatures.admin')
                         ->with('success','Creature deleted successfully');
     }
 }
