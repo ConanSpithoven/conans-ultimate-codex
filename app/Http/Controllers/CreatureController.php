@@ -12,16 +12,41 @@ class CreatureController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
+    {
+        $data = Creature::where([
+            ['status', '=', 'active'],
+            ['name', '!=', Null],
+            [function ($query) use ($request){
+                if(($term = $request->term)) {
+                    $query->orWhere('name', 'LIKE', '%' . $term . '%')->get();
+                }
+            }]
+        ])
+            ->orderBy("id", "desc")
+            ->paginate(10);
+        return view('creatures.index', compact('data'))
+            ->with('i', (request()->input('page', 1) -1) *5);
+    }
+
+    public function admin()
+    {
+        $data = Creature::latest()->paginate(10);
+        return view('creatures.admin', compact('data'))->with('i', (request()->input('page', 1) -1) *5);
+    }
+
+    public function review()
     {
         $data = Creature::where('status', 'review')->get();
         return view('creatures.index', ['data' => $data]);
     }
 
-    public function admin()
+    public function approve(Creature $creature)
     {
-        $data = Creature::latest()->paginate(5);
-        return view('creatures.admin', compact('data'))->with('i', (request()->input('page', 1) -1) *5);
+        $creature->status = 'active';
+        $creature->save();
+        return redirect()->route('creatures.review')
+                        ->with('success','Creature approved successfully');
     }
 
     /**

@@ -7,6 +7,7 @@
             </div>
             <div class="pull-right">
                 <a class="btn btn-success" href="{{ route('creatures.create') }}"> Create New Creature</a>
+                <a href="{{ route('creatures.review')}}" class="btn btn-primary"> Review </a>
             </div>
         </div>
     </div>
