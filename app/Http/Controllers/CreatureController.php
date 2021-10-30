@@ -25,6 +25,7 @@ class CreatureController extends Controller
             [function ($query) use ($request){
                 if(($term = $request->term)) {
                     $query->orWhere('name', 'LIKE', '%' . $term . '%')->get();
+                    $query->orWhere('type', 'LIKE', '%' . $term . '%')->get();
                 }
                 if(($type = $request->filter_type)){
                     if($type !== ""){
