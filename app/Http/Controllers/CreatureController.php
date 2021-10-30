@@ -14,6 +14,11 @@ class CreatureController extends Controller
      */
     public function index(Request $request)
     {
+        $types = Creature::select('type')->distinct()->get()->pluck('type');
+        $filter_type = "";
+        if(isset($request->filter_type) && $request->filter_type !== ""){
+            $filter_type = $request->filter_type;
+        }
         $data = Creature::where([
             ['status', '=', 'active'],
             ['name', '!=', Null],
@@ -21,11 +26,16 @@ class CreatureController extends Controller
                 if(($term = $request->term)) {
                     $query->orWhere('name', 'LIKE', '%' . $term . '%')->get();
                 }
+                if(($type = $request->filter_type)){
+                    if($type !== ""){
+                        $query->where('type', '=', $type)->get();
+                    }
+                }
             }]
         ])
             ->orderBy("id", "desc")
             ->paginate(10);
-        return view('creatures.index', compact('data'))
+        return view('creatures.index', ["data" => $data, "types" => $types, "filter_type" => $filter_type])
             ->with('i', (request()->input('page', 1) -1) *5);
     }
 

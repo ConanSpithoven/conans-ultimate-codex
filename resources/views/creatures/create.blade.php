@@ -51,7 +51,13 @@
         <div class="col-md-4">
             <div class="form-group">
                 <strong>Type:</strong>
-                <input type="text" name="type" class="form-control" placeholder="Type"></textarea>
+                <select name="type" class="form-control">
+                    <option value="Abberation">Abberation</Option>
+                    <option value="Beast">Beast</Option>
+                    <option value="Elemental">Elemental</Option>
+                    <option value="Plant">Plant</Option>
+                    <option value="Humanoid">Humanoid</Option>
+                </select>
             </div>
         </div>
         <div class="col-md-4">
