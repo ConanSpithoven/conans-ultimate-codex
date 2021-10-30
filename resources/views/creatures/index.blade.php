@@ -55,9 +55,11 @@
                 <td>{{ $value->alignment }}</td>
                 @if($action == "review")
                     <td>
-                        <button class="btn btn-info" type="submit" title="Approve" >
-                            Approve
-                        </button>
+                        @if ($value->status == 0)
+                            in review
+                        @else
+                            approved
+                        @endif
                     </td>
                 @endif
             </tr>

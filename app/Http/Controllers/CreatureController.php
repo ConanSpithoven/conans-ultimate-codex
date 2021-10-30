@@ -26,7 +26,7 @@ class CreatureController extends Controller
             $search_term = "Search creatures";
         }
         $data = Creature::where([
-            ['status', '=', 'active'],
+            ['status', '=', 1],
             ['name', '!=', Null],
             [function ($query) use ($request){
                 if(($term = $request->term)) {
@@ -61,7 +61,7 @@ class CreatureController extends Controller
             $search_term = "Search creatures";
         }
         $data = Creature::where([
-            ['status', '=', 'active'],
+            ['status', '=', 1],
             ['name', '!=', Null],
             [function ($query) use ($request){
                 if(($term = $request->term)) {
@@ -95,7 +95,7 @@ class CreatureController extends Controller
             $search_term = "Search creatures";
         }
         $data = Creature::where([
-            ['status', '=', 'review'],
+            ['status', '=', 0],
             ['name', '!=', Null],
             [function ($query) use ($request){
                 if(($term = $request->term)) {
