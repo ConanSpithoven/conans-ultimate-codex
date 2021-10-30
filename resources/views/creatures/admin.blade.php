@@ -1,6 +1,6 @@
 @extends('layouts.sidebar')
 @section('content')
-<div class="row" style="margin-top: 5rem;">
+    <div class="row" style="margin-top: 5rem;">
         <div class="col-lg-10 margin-tb">
             <div class="pull-left">
                 <h2>Creature Codex</h2>

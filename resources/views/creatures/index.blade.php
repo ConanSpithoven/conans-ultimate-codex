@@ -36,6 +36,13 @@
             </form>
         </div>
     </div>
+
+    @if ($message = Session::get('success'))
+        <div class="alert alert-success">
+            <p>{{ $message }}</p>
+        </div>
+    @endif
+
     <div class="col-md-6">
         <table class="table table-bordered">
             <tr>
@@ -45,19 +52,23 @@
                 <th>Alignment</th>
                 @if($action == "review")
                     <th>Status</th>
+                    <th>Toggle Status</th>
                 @endif
             </tr>
-            @foreach ($data as $key => $value)
+            @foreach ($data as $key => $creature)
             <tr>
-                <td><a href="{{ route('creatures.show',$value->id) }}">{{ $value->name }}</a></td>
-                <td>{{ $value->size }}</td>
-                <td>{{ $value->type }}</td>
-                <td>{{ $value->alignment }}</td>
+                <td><a href="{{ route('creatures.show',$creature->id) }}">{{ $creature->name }}</a></td>
+                <td>{{ $creature->size }}</td>
+                <td>{{ $creature->type }}</td>
+                <td>{{ $creature->alignment }}</td>
                 @if($action == "review")
+                    <td>{{ $creature->status }}</td>
                     <td>
-                        <button class="btn btn-info" type="submit" title="Approve" >
-                            Approve
-                        </button>
+                        <livewire:toggle-button
+                            :model="$creature"
+                            field="status"
+                            key="{{$creature->id}}"
+                        >
                     </td>
                 @endif
             </tr>

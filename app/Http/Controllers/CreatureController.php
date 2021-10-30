@@ -95,7 +95,6 @@ class CreatureController extends Controller
             $search_term = "Search creatures";
         }
         $data = Creature::where([
-            ['status', '=', 'review'],
             ['name', '!=', Null],
             [function ($query) use ($request){
                 if(($term = $request->term)) {
@@ -113,6 +112,14 @@ class CreatureController extends Controller
             ->paginate(10);
         return view('creatures.index', ["data" => $data, "types" => $types, "filter_type" => $filter_type, "action" => $action, "search_term" => $search_term])
             ->with('i', (request()->input('page', 1) -1) *5);
+    }
+
+    public function approve(Request $request, Creature $creature)
+    {
+        $creature->update(['status' => 'active']);
+        var_dump($creature);exit;
+        return redirect()->route('creatures.review')
+                        ->with('success','Creature updated successfully');
     }
 
     /**

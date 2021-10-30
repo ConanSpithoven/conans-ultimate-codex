@@ -16,7 +16,7 @@ class CreateCreaturesTable extends Migration
         Schema::create('creatures', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id')->default(0);
-            $table->string('status')->default("review");
+            $table->string('status')->default(0);
             $table->string('name')->default("");
             $table->string('size')->default("");
             $table->string('type')->default("");

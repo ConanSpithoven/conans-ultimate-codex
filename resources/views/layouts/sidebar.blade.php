@@ -2,6 +2,7 @@
 <html>
     <head>
         @include('includes.head')
+        @livewireStyles
     </head>
     <body>
         <header class="row">
@@ -27,5 +28,6 @@
         <footer class="row">
             @include('includes.footer')
         </footer>
+        @livewireScripts
     </body>
 </html>
