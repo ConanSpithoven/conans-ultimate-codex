@@ -18,18 +18,18 @@
     </div>
     <div class="row">
         <div class="col-md-10">
-            <form action="{{ route('creatures.index') }}" method="GET" role="search">
+            <form @if($action == "review") action="{{ route('creatures.review') }}" @else action="{{ route('creatures.index') }}" @endif method="GET" role="search">
                 <div class="input-group">
                     <span class="input-group-btn">
                         <button class="btn btn-info" type="submit" title="Search creatures">
                             Search
                         </button>
                     </span>
-                    <input type="text" class="form-control col-md-4" name="term" placeholder="Search creatures" id="term">
+                    <input type="text" class="form-control col-md-4" name="term" placeholder="{{$search_term}}" id="term" @if($search_term !== "Search creatures") value="{{$search_term}}" @endif>
                     <select class="form-control col-md-2" name="filter_type" id="filter_type">
-                        <option value="" @if ($filter_type == "") selected @endif>Creature Type</option>
+                        <option value="" @if (isset($filter_type) && $filter_type == "") selected @endif>Creature Type</option>
                         @foreach ($types as $type)
-                            <option value="{{$type}}" @if ($type == $filter_type) selected @endif>{{$type}}</option>
+                            <option value="{{$type}}" @if (isset($filter_type) && $type == $filter_type) selected @endif>{{$type}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -43,6 +43,9 @@
                 <th>Type</th>
                 <th>Size</th>
                 <th>Alignment</th>
+                @if($action == "review")
+                    <th>Status</th>
+                @endif
             </tr>
             @foreach ($data as $key => $value)
             <tr>
@@ -50,7 +53,13 @@
                 <td>{{ $value->size }}</td>
                 <td>{{ $value->type }}</td>
                 <td>{{ $value->alignment }}</td>
-                </td>
+                @if($action == "review")
+                    <td>
+                        <button class="btn btn-info" type="submit" title="Approve" >
+                            Approve
+                        </button>
+                    </td>
+                @endif
             </tr>
             @endforeach
         </table>
