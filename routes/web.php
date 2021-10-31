@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CreatureController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,25 +14,11 @@ use App\Http\Controllers\CreatureController;
 */
 
 Route::get('/', function () {
-    return view('main');
-});
-Route::get('/', function()
-{
-    return View::make('pages.main');
+    return view('pages.main');
 });
 
-Route::get('creatures/review', [CreatureController::class, 'review'])->name('creatures.review');
-Route::get('creatures/admin', [CreatureController::class, 'admin'])->name('creatures.admin');
-Route::resource('creatures', CreatureController::class);
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
-Route::get('about', function()
-{
-    return View::make('pages.about');
-});
-Route::get('contact', function()
-{
-    return View::make('pages.contact');
-});
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+require __DIR__.'/auth.php';
