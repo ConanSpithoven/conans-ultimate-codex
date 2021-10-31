@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Creature;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CreatureController extends Controller
 {
@@ -48,71 +49,79 @@ class CreatureController extends Controller
 
     public function admin(Request $request)
     {
-        $action = "list";
-        $types = Creature::select('type')->distinct()->get()->pluck('type');
-        $filter_type = "";
-        $term = "";
-        if(isset($request->filter_type) && $request->filter_type !== ""){
-            $filter_type = $request->filter_type;
-        }
-        if(isset($request->term) && $request->term !== ""){
-            $search_term = $request->term;
-        } else {
-            $search_term = "Search creatures";
-        }
-        $data = Creature::where([
-            ['status', '=', 1],
-            ['name', '!=', Null],
-            [function ($query) use ($request){
-                if(($term = $request->term)) {
-                    $query->orWhere('name', 'LIKE', '%' . $term . '%')->get();
-                    $query->orWhere('type', 'LIKE', '%' . $term . '%')->get();
-                }
-                if(($type = $request->filter_type)){
-                    if($type !== ""){
-                        $query->where('type', '=', $type)->get();
+        if(Auth::check()){
+            $action = "list";
+            $types = Creature::select('type')->distinct()->get()->pluck('type');
+            $filter_type = "";
+            $term = "";
+            if(isset($request->filter_type) && $request->filter_type !== ""){
+                $filter_type = $request->filter_type;
+            }
+            if(isset($request->term) && $request->term !== ""){
+                $search_term = $request->term;
+            } else {
+                $search_term = "Search creatures";
+            }
+            $data = Creature::where([
+                ['status', '=', 1],
+                ['name', '!=', Null],
+                [function ($query) use ($request){
+                    if(($term = $request->term)) {
+                        $query->orWhere('name', 'LIKE', '%' . $term . '%')->get();
+                        $query->orWhere('type', 'LIKE', '%' . $term . '%')->get();
                     }
-                }
-            }]
-        ])
-            ->orderBy("id", "desc")
-            ->paginate(10);
-        return view('creatures.admin', ["data" => $data, "types" => $types, "filter_type" => $filter_type, "search_term" => $search_term])
-            ->with('i', (request()->input('page', 1) -1) *5);
+                    if(($type = $request->filter_type)){
+                        if($type !== ""){
+                            $query->where('type', '=', $type)->get();
+                        }
+                    }
+                }]
+            ])
+                ->orderBy("id", "desc")
+                ->paginate(10);
+            return view('creatures.admin', ["data" => $data, "types" => $types, "filter_type" => $filter_type, "search_term" => $search_term])
+                ->with('i', (request()->input('page', 1) -1) *5);
+        } else {
+            return($this->index($request));
+        }
     }
 
     public function review(Request $request)
     {
-        $action = "review";
-        $types = Creature::select('type')->distinct()->get()->pluck('type');
-        $filter_type = "";
-        if(isset($request->filter_type) && $request->filter_type !== ""){
-            $filter_type = $request->filter_type;
-        }
-        if(isset($request->term) && $request->term !== ""){
-            $search_term = $request->term;
-        } else {
-            $search_term = "Search creatures";
-        }
-        $data = Creature::where([
-            ['status', '=', 0],
-            ['name', '!=', Null],
-            [function ($query) use ($request){
-                if(($term = $request->term)) {
-                    $query->orWhere('name', 'LIKE', '%' . $term . '%')->get();
-                    $query->orWhere('type', 'LIKE', '%' . $term . '%')->get();
-                }
-                if(($type = $request->filter_type)){
-                    if($type !== ""){
-                        $query->where('type', '=', $type)->get();
+        if(Auth::check()){
+            $action = "review";
+            $types = Creature::select('type')->distinct()->get()->pluck('type');
+            $filter_type = "";
+            if(isset($request->filter_type) && $request->filter_type !== ""){
+                $filter_type = $request->filter_type;
+            }
+            if(isset($request->term) && $request->term !== ""){
+                $search_term = $request->term;
+            } else {
+                $search_term = "Search creatures";
+            }
+            $data = Creature::where([
+                ['status', '=', 0],
+                ['name', '!=', Null],
+                [function ($query) use ($request){
+                    if(($term = $request->term)) {
+                        $query->orWhere('name', 'LIKE', '%' . $term . '%')->get();
+                        $query->orWhere('type', 'LIKE', '%' . $term . '%')->get();
                     }
-                }
-            }]
-        ])
-            ->orderBy("id", "desc")
-            ->paginate(10);
-        return view('creatures.index', ["data" => $data, "types" => $types, "filter_type" => $filter_type, "action" => $action, "search_term" => $search_term])
-            ->with('i', (request()->input('page', 1) -1) *5);
+                    if(($type = $request->filter_type)){
+                        if($type !== ""){
+                            $query->where('type', '=', $type)->get();
+                        }
+                    }
+                }]
+            ])
+                ->orderBy("id", "desc")
+                ->paginate(10);
+            return view('creatures.index', ["data" => $data, "types" => $types, "filter_type" => $filter_type, "action" => $action, "search_term" => $search_term])
+                ->with('i', (request()->input('page', 1) -1) *5);
+        } else {
+            return($this->index($request));
+        }
     }
 
     /**
@@ -133,8 +142,8 @@ class CreatureController extends Controller
      */
     public function store(Request $request)
     {
+        $request->user_id = Auth::id();
         $request->validate([
-           'user_id' => 'required',
            'name' => 'required',
        ]);
    
@@ -176,7 +185,6 @@ class CreatureController extends Controller
     public function update(Request $request, Creature $creature)
     {
         $request->validate([
-            'user_id' => 'required',
             'name' => 'required',
         ]);
         $creature->update($request->all());
