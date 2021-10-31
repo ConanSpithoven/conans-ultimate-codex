@@ -22,6 +22,10 @@ Route::get('/', function()
     return View::make('pages.main');
 });
 
+Route::get('/dashboard', function(){
+    return View('pages.main');
+});
+
 Route::get('creatures/review', [CreatureController::class, 'review'])->name('creatures.review');
 Route::get('creatures/admin', [CreatureController::class, 'admin'])->name('creatures.admin');
 Route::resource('creatures', CreatureController::class);
