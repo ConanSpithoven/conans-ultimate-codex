@@ -5,15 +5,17 @@
             <div class="pull-left">
                 <h2>Creature Codex</h2>
             </div>
-            <div class="pull-right">
-                <div class="row">
-                    <div class="col-md-6">
-                        <a class="btn btn-success" href="{{ route('creatures.create') }}"> Create New Creature</a>
-                        <a href="{{ route('creatures.admin')}}" class="btn btn-primary"> Admin </a>
-                        <a href="{{ route('creatures.review')}}" class="btn btn-primary"> Review </a>
+            @auth
+                <div class="pull-right">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a class="btn btn-success" href="{{ route('creatures.create') }}"> Create New Creature</a>
+                            <a href="{{ route('creatures.admin')}}" class="btn btn-primary"> Admin </a>
+                            <a href="{{ route('creatures.review')}}" class="btn btn-primary"> Review </a>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endauth
         </div>
     </div>
     <div class="row">
