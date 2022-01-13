@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CreatureController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,12 +23,8 @@ Route::get('/', function()
     return View::make('pages.main');
 });
 
-Route::get('/dashboard', function(){
-    return View('pages.main');
-});
-
-Route::get('creatures/review', [CreatureController::class, 'review'])->name('creatures.review');
-Route::get('creatures/admin', [CreatureController::class, 'admin'])->name('creatures.admin');
+Route::get('creatures/review', [CreatureController::class, 'review'])->name('creatures.review')->middleware('auth');
+Route::get('creatures/admin', [CreatureController::class, 'admin'])->name('creatures.admin')->middleware('auth');
 Route::resource('creatures', CreatureController::class);
 
 Route::get('about', function()
