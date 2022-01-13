@@ -25,11 +25,15 @@
     <form action="{{ route('creatures.update',$creature->id) }}" method="POST">
         @csrf
         @method('PUT')
-   
+        @php
+            $size = $creature->size;
+            $type = $creature->type;
+            $alignment = $creature->alignment;
+        @endphp
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
-                    <strong>user_id:</strong>
+                    <strong>user_id: *</strong>
                     <input type="text" name="user_id" value="{{ $creature->user_id }}" class="form-control" placeholder="Enter user_id">
                 </div>
             </div>
@@ -37,30 +41,53 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
-                    <strong>Creature Name:</strong>
+                    <strong>Creature Name: *</strong>
                     <input type="text" name="name" value="{{ $creature->name }}" class="form-control" placeholder="Enter Creature name"></textarea>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <strong>Size:</strong>
-                    <input type="text" name="size" value="{{ $creature->size }}" class="form-control" placeholder="Size"></textarea>
-                </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <strong>Size: *</strong><select name="size" class="form-control">
+                    <option value="Tiny" @if ($size == "Tiny") selected @endif >Tiny</Option>
+                    <option value="Small" @if ($size == "Small") selected @endif>Small</Option>
+                    <option value="Medium" @if ($size == "Medium") selected @endif>Medium</Option>
+                    <option value="Large" @if ($size == "Large") selected @endif>Large</Option>
+                    <option value="Huge" @if ($size == "Huge") selected @endif>Huge</Option>
+                    <option value="Gargantuan" @if ($size == "Gargantuan") selected @endif>Gargantuan</Option>
+                    <option value="Massive" @if ($size == "Massive") selected @endif>Massive</Option>
+                </select>
             </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <strong>Type:</strong>
-                    <input type="text" name="type" value="{{ $creature->type }}" class="form-control" placeholder="Type"></textarea>
-                </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <strong>Type: *</strong>
+                <select name="type" class="form-control">
+                    <option value="Abberation" @if ($type == "Abberation") selected @endif>Abberation</Option>
+                    <option value="Beast" @if ($type == "Beast") selected @endif>Beast</Option>
+                    <option value="Elemental" @if ($type == "Elemental") selected @endif>Elemental</Option>
+                    <option value="Plant" @if ($type == "Plant") selected @endif>Plant</Option>
+                    <option value="Humanoid" @if ($type == "Humanoid") selected @endif>Humanoid</Option>
+                </select>
             </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <strong>Alignment:</strong>
-                    <input type="text" name="alignment" value="{{ $creature->alignment }}" class="form-control" placeholder="Alignment"></textarea>
-                </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <strong>Alignment: *</strong>
+                <select name="alignment" class="form-control">
+                    <option value="Lawful Neutral" @if ($alignment == "Lawful Neutral") selected @endif>Lawful Neutral</Option>
+                    <option value="True Neutral" @if ($alignment == "True Neutral") selected @endif>True Neutral</Option>
+                    <option value="Chaotic Neutral" @if ($alignment == "Chaotic Neutral") selected @endif>Chaotic Neutral</Option>
+                    <option value="Lawful Evil" @if ($alignment == "Lawful Evil") selected @endif>Lawful Evil</Option>
+                    <option value="Neutral Evil" @if ($alignment == "Neutral Evil") selected @endif>Neutral Evil</Option>
+                    <option value="Chaotic Evil" @if ($alignment == "Chaotic Evil") selected @endif>Chaotic Evil</Option>
+                    <option value="Lawful Good" @if ($alignment == "Lawful Good") selected @endif>Lawful Good</Option>
+                    <option value="Neutral Good" @if ($alignment == "Neutral Good") selected @endif>Neutral Good</Option>
+                    <option value="Chaotic Good" @if ($alignment == "Chaotic Good") selected @endif>Chaotic Good</Option>
+                </select>
             </div>
+        </div>
         </div>
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
