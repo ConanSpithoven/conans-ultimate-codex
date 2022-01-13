@@ -26,10 +26,22 @@
                         </button>
                     </span>
                     <input type="text" class="form-control col-md-4" name="term" placeholder="{{$search_term}}" id="term" @if($search_term !== "Search creatures") value="{{$search_term}}" @endif>
+                    <select class="form-control col-md-2" name="filter_size" id="filter_size">
+                        <option value="" @if (isset($filter_size) && $filter_size == "") selected @endif>Creature Size</option>
+                        @foreach ($sizes as $size)
+                            <option value="{{$size}}" @if (isset($filter_size) && $size == $filter_size) selected @endif>{{$size}}</option>
+                        @endforeach
+                    </select>
                     <select class="form-control col-md-2" name="filter_type" id="filter_type">
                         <option value="" @if (isset($filter_type) && $filter_type == "") selected @endif>Creature Type</option>
                         @foreach ($types as $type)
                             <option value="{{$type}}" @if (isset($filter_type) && $type == $filter_type) selected @endif>{{$type}}</option>
+                        @endforeach
+                    </select>
+                    <select class="form-control col-md-2" name="filter_alignment" id="filter_alignment">
+                        <option value="" @if (isset($filter_filter_alignment) && $filter_filter_alignment == "") selected @endif>Creature Alignment</option>
+                        @foreach ($alignments as $alignment)
+                            <option value="{{$alignment}}" @if (isset($filter_alignment) && $alignment == $filter_alignment) selected @endif>{{$alignment}}</option>
                         @endforeach
                     </select>
                 </div>
