@@ -35,7 +35,8 @@
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
-                <strong>Size: *</strong><select name="size" class="form-control">
+                <strong>Size: *</strong>
+                <select name="size" class="form-control">
                     <option value="Tiny">Tiny</Option>
                     <option value="Small">Small</Option>
                     <option value="Medium">Medium</Option>

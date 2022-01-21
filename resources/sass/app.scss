@@ -6,30 +6,3 @@
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
-
-.body{
-    background-color: lightgrey;
-}
-
-.footer{
-    position: relative;
-    display: block;
-    margin-top: 20px;
-    bottom: 0px;
-}
-
-.navbar{
-    padding-left: 50px;
-    background-color: aquamarine;
-    li{
-        font-size: 20px;
-        font-style: bold;
-        color: black;
-    }
-}
-
-.navbar-fixed-top{
-    li{
-        margin-right: 5px;
-    }
-}

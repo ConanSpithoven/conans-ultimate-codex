@@ -9,11 +9,7 @@ class Creature extends Model
 {
     use HasFactory;
 
-    protected $hidden = [
-        'user_id',
-    ];
-
     protected $fillable = [
-        'name', 'size', 'type', 'alignment'
+        'user_id', 'name', 'size', 'type', 'alignment'
     ];
 }

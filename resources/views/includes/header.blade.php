@@ -3,6 +3,12 @@
         <ul class="nav navbar-fixed-top">
             <li><a href="/">Home</a></li>
             <li><a href="/creatures">Creatures</a></li>
+            @can('user-edit')
+                <li><a href="/users">Users</a></li>
+            @endcan
+            @can('role-edit')
+                <li><a href="/roles">Roles</a></li>
+            @endcan
             <li><a href="/about">About</a></li>
             <li><a href="/contact">Contact</a></li>
         </ul>

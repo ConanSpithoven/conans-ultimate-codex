@@ -9,9 +9,13 @@
                 <div class="pull-right">
                     <div class="row">
                         <div class="col-md-6">
-                            <a class="btn btn-success" href="{{ route('creatures.create') }}"> Create New Creature</a>
-                            <a href="{{ route('creatures.admin')}}" class="btn btn-primary"> Admin </a>
-                            <a href="{{ route('creatures.review')}}" class="btn btn-primary"> Review </a>
+                            @can('creature-create')
+                                <a class="btn btn-success" href="{{ route('creatures.create') }}"> Create New Creature</a>
+                            @endcan
+                                <a href="{{ route('creatures.admin')}}" class="btn btn-primary"> Admin </a>
+                            @can('creature-review')
+                                <a href="{{ route('creatures.review')}}" class="btn btn-primary"> Review </a>
+                            @endcan
                         </div>
                     </div>
                 </div>
@@ -69,11 +73,7 @@
                 <td>{{ $value->alignment }}</td>
                 @if($action == "review")
                     <td>
-                        @if ($value->status == 0)
-                            in review
-                        @else
-                            approved
-                        @endif
+                        {{ $value->status }}
                     </td>
                 @endif
             </tr>
