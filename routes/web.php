@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CreatureController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,12 +25,13 @@ Route::get('/', function()
     return View::make('pages.main');
 });
 
-Route::get('/dashboard', function(){
-    return View('pages.main');
+Route::group(['middleware' => ['auth']], function() {
+    Route::resource('roles', RoleController::class);
+    Route::resource('users', UserController::class);
+    Route::get('creatures/review', [CreatureController::class, 'review'])->name('creatures.review');
+    Route::get('creatures/admin', [CreatureController::class, 'admin'])->name('creatures.admin');
 });
 
-Route::get('creatures/review', [CreatureController::class, 'review'])->name('creatures.review');
-Route::get('creatures/admin', [CreatureController::class, 'admin'])->name('creatures.admin');
 Route::resource('creatures', CreatureController::class);
 
 Route::get('about', function()
@@ -40,3 +44,7 @@ Route::get('contact', function()
 });
 
 require __DIR__.'/auth.php';
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

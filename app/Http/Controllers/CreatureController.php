@@ -3,11 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Creature;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use DB;
 
 class CreatureController extends Controller
 {
+    function __construct()
+    {
+         //$this->middleware('permission:creature-list|creature-create|creature-edit|creature-delete', ['only' => ['index','show']]);
+         $this->middleware('permission:creature-create', ['only' => ['create','store']]);
+         $this->middleware('permission:creature-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:creature-delete', ['only' => ['destroy']]);
+         $this->middleware('permission:creature-review', ['only' => ['review']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -37,7 +48,7 @@ class CreatureController extends Controller
             $search_term = "Search creatures";
         }
         $data = Creature::where([
-            ['status', '=', 1],
+            ['status', '=', 'approved'],
             ['name', '!=', Null],
             [function ($query) use ($request){
                 if(($size = $request->filter_size)){
@@ -74,35 +85,66 @@ class CreatureController extends Controller
     {
         if(Auth::check()){
             $action = "list";
+            $sizes = Creature::select('size')->distinct()->get()->pluck('size');
             $types = Creature::select('type')->distinct()->get()->pluck('type');
+            $alignments = Creature::select('alignment')->distinct()->get()->pluck('alignment');
+            $filter_size = "";
+            if(isset($request->filter_size) && $request->filter_size !== ""){
+                $filter_size = $request->filter_size;
+            }
             $filter_type = "";
-            $term = "";
             if(isset($request->filter_type) && $request->filter_type !== ""){
                 $filter_type = $request->filter_type;
             }
+            $filter_alignment = "";
+            if(isset($request->filter_alignment) && $request->filter_alignment !== ""){
+                $filter_alignment = $request->filter_alignment;
+            }
+            $term = "";
             if(isset($request->term) && $request->term !== ""){
                 $search_term = $request->term;
             } else {
                 $search_term = "Search creatures";
             }
+
+            $user_id = Auth::id();
+            $role_ids = DB::table('model_has_roles')->where('model_id', '=', $user_id)->get()->pluck('role_id')->toArray();
+
             $data = Creature::where([
-                ['status', '=', 1],
                 ['name', '!=', Null],
+                [function ($query) use ($user_id, $role_ids){
+                    if(! in_array(1, $role_ids)){
+                        $query->Where('user_id', '=', $user_id);
+                    }
+                }],
                 [function ($query) use ($request){
-                    if(($term = $request->term)) {
-                        $query->orWhere('name', 'LIKE', '%' . $term . '%')->get();
-                        $query->orWhere('type', 'LIKE', '%' . $term . '%')->get();
+                    if(($size = $request->filter_size)){
+                        if($size !== ""){
+                            $query->Where('size', '=', $size);
+                        }
                     }
                     if(($type = $request->filter_type)){
                         if($type !== ""){
-                            $query->where('type', '=', $type)->get();
+                            $query->Where('type', '=', $type);
                         }
                     }
+                    if(($alignment = $request->filter_alignment)){
+                        if($alignment !== ""){
+                            $query->Where('alignment', '=', $alignment);
+                        }
+                    }
+                }],
+                [function ($query) use ($request){
+                    if(($term = $request->term)) {
+                        $query->orWhere('name', 'LIKE', '%' . $term . '%');
+                        $query->orWhere('type', 'LIKE', '%' . $term . '%');
+                    }
+                    $query->get();
                 }]
             ])
                 ->orderBy("id", "desc")
                 ->paginate(10);
-            return view('creatures.admin', ["data" => $data, "types" => $types, "filter_type" => $filter_type, "search_term" => $search_term])
+            return view('creatures.admin', ["data" => $data, "sizes" => $sizes, "filter_size" => $filter_size, "types" => $types, "filter_type" => $filter_type, "alignments" => $alignments, "filter_alignment" => $filter_alignment, "action" => $action, "search_term" => $search_term])
                 ->with('i', (request()->input('page', 1) -1) *5);
         } else {
             return($this->index($request));
@@ -111,40 +153,59 @@ class CreatureController extends Controller
 
     public function review(Request $request)
     {
-        if(Auth::check()){
-            $action = "review";
-            $types = Creature::select('type')->distinct()->get()->pluck('type');
-            $filter_type = "";
-            if(isset($request->filter_type) && $request->filter_type !== ""){
-                $filter_type = $request->filter_type;
-            }
-            if(isset($request->term) && $request->term !== ""){
-                $search_term = $request->term;
-            } else {
-                $search_term = "Search creatures";
-            }
-            $data = Creature::where([
-                ['status', '=', 0],
-                ['name', '!=', Null],
-                [function ($query) use ($request){
-                    if(($term = $request->term)) {
-                        $query->orWhere('name', 'LIKE', '%' . $term . '%')->get();
-                        $query->orWhere('type', 'LIKE', '%' . $term . '%')->get();
-                    }
-                    if(($type = $request->filter_type)){
-                        if($type !== ""){
-                            $query->where('type', '=', $type)->get();
-                        }
-                    }
-                }]
-            ])
-                ->orderBy("id", "desc")
-                ->paginate(10);
-            return view('creatures.index', ["data" => $data, "types" => $types, "filter_type" => $filter_type, "action" => $action, "search_term" => $search_term])
-                ->with('i', (request()->input('page', 1) -1) *5);
-        } else {
-            return($this->index($request));
+        $action = "review";
+        $sizes = Creature::select('size')->distinct()->get()->pluck('size');
+        $types = Creature::select('type')->distinct()->get()->pluck('type');
+        $alignments = Creature::select('alignment')->distinct()->get()->pluck('alignment');
+        $filter_size = "";
+        if(isset($request->filter_size) && $request->filter_size !== ""){
+            $filter_size = $request->filter_size;
         }
+        $filter_type = "";
+        if(isset($request->filter_type) && $request->filter_type !== ""){
+            $filter_type = $request->filter_type;
+        }
+        $filter_alignment = "";
+        if(isset($request->filter_alignment) && $request->filter_alignment !== ""){
+            $filter_alignment = $request->filter_alignment;
+        }
+        if(isset($request->term) && $request->term !== ""){
+            $search_term = $request->term;
+        } else {
+            $search_term = "Search creatures";
+        }
+        $data = Creature::where([
+            ['status', '=', 'review'],
+            ['name', '!=', Null],
+            [function ($query) use ($request){
+                if(($size = $request->filter_size)){
+                    if($size !== ""){
+                        $query->Where('size', '=', $size);
+                    }
+                }
+                if(($type = $request->filter_type)){
+                    if($type !== ""){
+                        $query->Where('type', '=', $type);
+                    }
+                }
+                if(($alignment = $request->filter_alignment)){
+                    if($alignment !== ""){
+                        $query->Where('alignment', '=', $alignment);
+                    }
+                }
+            }],
+            [function ($query) use ($request){
+                if(($term = $request->term)) {
+                    $query->orWhere('name', 'LIKE', '%' . $term . '%');
+                    $query->orWhere('type', 'LIKE', '%' . $term . '%');
+                }
+                $query->get();
+            }]
+        ])
+            ->orderBy("id", "desc")
+            ->paginate(10);
+        return view('creatures.index', ["data" => $data, "sizes" => $sizes, "filter_size" => $filter_size, "types" => $types, "filter_type" => $filter_type, "alignments" => $alignments, "filter_alignment" => $filter_alignment, "action" => $action, "search_term" => $search_term])
+            ->with('i', (request()->input('page', 1) -1) *5);
     }
 
     /**
@@ -154,6 +215,10 @@ class CreatureController extends Controller
      */
     public function create()
     {
+        if(! Auth::check()){
+            // not logged in
+            return route('login');
+        }
         return view('creatures.create');
     }
 
@@ -165,13 +230,15 @@ class CreatureController extends Controller
      */
     public function store(Request $request)
     {
-        $request->user_id = Auth::id();
+        $user_id = Auth::id();
+        $request->request->add(["user_id" => $user_id]);
         $request->validate([
            'name' => 'required',
            'size' => 'required',
-           'type' => 'required'
+           'type' => 'required',
+           'alignment' => 'required'
        ]);
-
+       
        $data = $request->only('size', 'type', 'alignment');
        $field_validation = $this->validate_fields($data, $request);
 
@@ -179,7 +246,7 @@ class CreatureController extends Controller
             return back()->withErrors([$field_validation])
                     ->withInput($request->input());
         }
-
+        
        Creature::create($request->all());
     
        return redirect()->route('creatures.index')
@@ -205,7 +272,11 @@ class CreatureController extends Controller
      */
     public function edit(Creature $creature)
     {
-        return view('creatures.edit',compact('creature'));
+        if(! Auth::check()){
+            // not logged in
+            return route('login');
+        }
+        return view('creatures.edit', compact('creature'));
     }
 
     /**
@@ -217,6 +288,10 @@ class CreatureController extends Controller
      */
     public function update(Request $request, Creature $creature)
     {
+        if(! Auth::check()){
+            // not logged in
+            return route('login');
+        }
         $request->validate([
             'name' => 'required',
             'size' => 'required',
@@ -245,6 +320,10 @@ class CreatureController extends Controller
      */
     public function destroy(Creature $creature)
     {
+        if(! Auth::check()){
+            // not logged in
+            return route('login');
+        }
         $creature->delete();
     
         return redirect()->route('creatures.admin')

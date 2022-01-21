@@ -3,7 +3,7 @@
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
-            <h2>Add New Creature</h2>
+            <h1>Add a new Creature</h1>
         </div>
         <div class="pull-right">
             <a class="btn btn-primary" href="{{ route('creatures.index') }}"> Back</a>
@@ -24,15 +24,6 @@
    
 <form action="{{ route('creatures.store') }}" method="POST">
     @csrf
-  
-    <div class="row">
-        <div class="col-md-4">
-            <div class="form-group">
-                <strong>user_id: *</strong>
-                <input type="text" name="user_id" class="form-control" placeholder="Enter user_id">
-            </div>
-        </div>
-    </div>
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
@@ -44,7 +35,8 @@
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
-                <strong>Size: *</strong><select name="size" class="form-control">
+                <strong>Size: *</strong>
+                <select name="size" class="form-control">
                     <option value="Tiny">Tiny</Option>
                     <option value="Small">Small</Option>
                     <option value="Medium">Medium</Option>

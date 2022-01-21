@@ -33,14 +33,6 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
-                    <strong>user_id: *</strong>
-                    <input type="text" name="user_id" value="{{ $creature->user_id }}" class="form-control" placeholder="Enter user_id">
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
                     <strong>Creature Name: *</strong>
                     <input type="text" name="name" value="{{ $creature->name }}" class="form-control" placeholder="Enter Creature name"></textarea>
                 </div>
