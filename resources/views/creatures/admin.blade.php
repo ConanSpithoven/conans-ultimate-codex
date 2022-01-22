@@ -6,8 +6,8 @@
                 <h2>Creature Codex</h2>
             </div>
             <div class="pull-right">
-                <div class="row">
-                    <div class="col-md-6">
+                <div class="col-md-6">
+                    <div class="row">
                         @can('creature-create')
                             <a class="btn btn-success" href="{{ route('creatures.create') }}"> Create New Creature</a>
                         @endcan

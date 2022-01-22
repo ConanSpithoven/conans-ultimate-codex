@@ -175,7 +175,6 @@ class CreatureController extends Controller
             $search_term = "Search creatures";
         }
         $data = Creature::where([
-            ['status', '=', 'review'],
             ['name', '!=', Null],
             [function ($query) use ($request){
                 if(($size = $request->filter_size)){
@@ -206,6 +205,17 @@ class CreatureController extends Controller
             ->paginate(10);
         return view('creatures.index', ["data" => $data, "sizes" => $sizes, "filter_size" => $filter_size, "types" => $types, "filter_type" => $filter_type, "alignments" => $alignments, "filter_alignment" => $filter_alignment, "action" => $action, "search_term" => $search_term])
             ->with('i', (request()->input('page', 1) -1) *5);
+    }
+
+    public function changeReviewStatus(Request $request)
+    {
+        if($request->status == "approved" || $request->status == 'review'){
+            Creature::where('id', $request->creature_id)->update(array('status' => $request->status));
+        }
+  
+        // if 10th item to get approved for this user, make em a moderator
+
+        return response()->json(['success'=>'creature review status changed successfully.']);
     }
 
     /**
