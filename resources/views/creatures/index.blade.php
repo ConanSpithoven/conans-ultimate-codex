@@ -7,8 +7,8 @@
             </div>
             @auth
                 <div class="pull-right">
-                    <div class="row">
-                        <div class="col-md-6">
+                    <div class="col-md-6">
+                        <div class="row">
                             @can('creature-create')
                                 <a class="btn btn-success" href="{{ route('creatures.create') }}"> Create New Creature</a>
                             @endcan
@@ -72,12 +72,46 @@
                 <td>{{ $value->type }}</td>
                 <td>{{ $value->alignment }}</td>
                 @if($action == "review")
-                    <td>
-                        {{ $value->status }}
+                    <td id="review-toggle" >
+                        <input data-id="{{$value->id}}" class="toggle-button" type="checkbox" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="approved" data-off="review" @if ($value->status == 'approved') checked @endif>
                     </td>
                 @endif
             </tr>
             @endforeach
         </table>
     </div>
+    @if($action == "review")
+        <script>
+            $(function() {
+                //replace with blade shit ^
+
+                var csrftoken = $('meta[name="_token"]').attr('content')
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN':csrftoken
+                    }
+                });
+
+                $("td[id*=review-toggle]").each(function() {
+                    $(this).click((e) => {
+                        e.preventDefault();
+
+                        var toggleButton = $(this).find('.toggle-button');
+                        
+                        var status = toggleButton.prop('checked') == true ? "review" : "approved";
+                        var creature_id = toggleButton.data('id');
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('creatures.changeStatus') }}",
+                            data: {'status': status, 'creature_id': creature_id, '_token': csrftoken},
+                            success: function (data) {
+                                console.log(data.success);
+                            }
+                        });
+                    });
+                });
+            })
+        </script>
+    @endif
 @endsection

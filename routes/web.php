@@ -29,6 +29,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
     Route::get('creatures/review', [CreatureController::class, 'review'])->name('creatures.review');
+    Route::post('creatures/review', [CreatureController::class, 'changeReviewStatus'])->name('creatures.changeStatus');
     Route::get('creatures/admin', [CreatureController::class, 'admin'])->name('creatures.admin');
 });
 

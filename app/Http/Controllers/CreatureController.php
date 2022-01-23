@@ -4,8 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Creature;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use DB;
 
 class CreatureController extends Controller
@@ -175,7 +180,6 @@ class CreatureController extends Controller
             $search_term = "Search creatures";
         }
         $data = Creature::where([
-            ['status', '=', 'review'],
             ['name', '!=', Null],
             [function ($query) use ($request){
                 if(($size = $request->filter_size)){
@@ -206,6 +210,29 @@ class CreatureController extends Controller
             ->paginate(10);
         return view('creatures.index', ["data" => $data, "sizes" => $sizes, "filter_size" => $filter_size, "types" => $types, "filter_type" => $filter_type, "alignments" => $alignments, "filter_alignment" => $filter_alignment, "action" => $action, "search_term" => $search_term])
             ->with('i', (request()->input('page', 1) -1) *5);
+    }
+
+    public function changeReviewStatus(Request $request)
+    {
+        if($request->status == "approved" || $request->status == 'review'){
+            Creature::where('id', $request->creature_id)->update(array('status' => $request->status));
+        }
+  
+        $user_id = Creature::where('id', $request->creature_id)->get()->pluck('user_id')->toArray();
+        $user_id = $user_id[0];
+        $user = User::where('id', $user_id)->first();
+        
+        $approved_creatures = Creature::where([['status', 'approved'], ['user_id', $user_id]])->get();
+        $approved_count = $approved_creatures->count();
+        if($approved_count >= 3 && ! $user->hasRole('Moderator')){
+            //add moderator rights
+            $user->assignRole('Moderator');
+        } elseif($approved_count < 3 && $user->hasRole('Moderator')) {
+            //remove moderator rights
+            $user->removeRole('Moderator');
+        }
+
+        return response()->json(['success'=>'creature review status changed successfully.']);
     }
 
     /**

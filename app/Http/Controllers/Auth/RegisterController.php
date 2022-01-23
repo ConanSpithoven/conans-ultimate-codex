@@ -74,12 +74,7 @@ class RegisterController extends Controller
     
         $user = User::create($input);
 
-        $base_role = Role::where('name', '=', 'user')->get()->pluck('id');
-        if (isset($base_role) && $base_role){
-            $user->assignRole($base_role);
-        } else {
-            $user->assignRole($request->input('roles'));
-        }
+        $user->assignRole('User');
 
         return $user;
     }
