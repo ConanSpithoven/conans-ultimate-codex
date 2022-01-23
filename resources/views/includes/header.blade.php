@@ -14,7 +14,7 @@
         </ul>
     </div>
     <div class="col-md-2">
-        <ul class="nav navbar-fixed-top">
+        <ul class="nav navbar-fixed-top" style="left:unset; right:0;">
             @auth
                 <div class="hidden sm:flex sm:items-center sm:ml-6">
                     <x-dropdown align="right" width="48">
