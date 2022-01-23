@@ -84,7 +84,6 @@
         <script>
             $(function() {
                 //replace with blade shit ^
-                console.log('started javascript');
 
                 var csrftoken = $('meta[name="_token"]').attr('content')
 
@@ -112,8 +111,6 @@
                         });
                     });
                 });
-
-                console.log('document loaded');
             })
         </script>
     @endif

@@ -4,8 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Creature;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use DB;
 
 class CreatureController extends Controller
@@ -213,7 +218,19 @@ class CreatureController extends Controller
             Creature::where('id', $request->creature_id)->update(array('status' => $request->status));
         }
   
-        // if 10th item to get approved for this user, make em a moderator
+        $user_id = Creature::where('id', $request->creature_id)->get()->pluck('user_id')->toArray();
+        $user_id = $user_id[0];
+        $user = User::where('id', $user_id)->first();
+        
+        $approved_creatures = Creature::where([['status', 'approved'], ['user_id', $user_id]])->get();
+        $approved_count = $approved_creatures->count();
+        if($approved_count >= 3 && ! $user->hasRole('Moderator')){
+            //add moderator rights
+            $user->assignRole('Moderator');
+        } elseif($approved_count < 3 && $user->hasRole('Moderator')) {
+            //remove moderator rights
+            $user->removeRole('Moderator');
+        }
 
         return response()->json(['success'=>'creature review status changed successfully.']);
     }
