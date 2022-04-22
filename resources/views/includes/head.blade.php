@@ -1,11 +1,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Conans Ultimate Codex</title>
+<title>Buurman en Buurman</title>
 
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<link href="http://fonts.cdnfonts.com/css/lemonmilk" rel="stylesheet">
 
 <!-- Scripts -->
 <script src="{{ asset('js/app.js') }}" defer></script>
@@ -20,7 +21,5 @@
 <meta name="_token" content="{{ csrf_token() }}">
 
 <style>
-    body {
-        font-family: 'Nunito', sans-serif;
-    }
+    @import url('http://fonts.cdnfonts.com/css/lemonmilk');
 </style>

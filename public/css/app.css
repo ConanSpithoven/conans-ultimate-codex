@@ -10002,6 +10002,12 @@ h3 {
     border-color: #dee2e6;
   }
 }
+@font-face {
+  font-family: Gadugi;
+  src: local("/fonts/gadugi.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
 .navbar {
   font-size: large;
 }
@@ -10009,4 +10015,49 @@ h3 {
 .footer {
   position: fixed;
   bottom: 0;
+}
+
+.logo_image {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-bottom: 20px;
+  padding-bottom: 25px;
+  padding-top: 25px;
+  float: none !important;
+  background-image: url("https://images.pexels.com/photos/370984/pexels-photo-370984.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=365&w=100%");
+}
+
+body {
+  text-align: center;
+  font-family: "Gadugi" !important;
+}
+body p {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+body h1, body h2, body h3, body h4, body h5, body h6 {
+  font-weight: bold;
+  font-family: "Lemon/Milk" !important;
+}
+
+.menu-list {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.menu-card-item {
+  text-align: left;
+  display: inline-block;
+  font-size: 1.1em;
+}
+.menu-card-item .ingredrients {
+  color: #666;
+}
+.menu-card-item .price {
+  background-color: #000;
+  color: #fff;
+  display: inline-block;
+  margin-top: 8px;
+  padding: 2px 4px;
+  transform: rotate(5deg);
 }

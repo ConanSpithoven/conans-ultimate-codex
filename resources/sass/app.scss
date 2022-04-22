@@ -7,6 +7,13 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
+@font-face {
+    font-family: Gadugi;
+    src: local('/fonts/gadugi.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
 
 .navbar {
     font-size: large;
@@ -15,4 +22,52 @@
 .footer{
     position: fixed;
     bottom: 0;
+}
+
+//ilse styling
+
+.logo_image{
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-bottom: 20px;
+    padding-bottom: 25px;
+    padding-top: 25px;
+    float: none !important;
+    background-image: url("https://images.pexels.com/photos/370984/pexels-photo-370984.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=365&w=100%");
+}
+
+body{
+    text-align: center;
+    font-family: 'Gadugi' !important;
+    p {
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        font-weight: bold;
+        font-family: 'Lemon/Milk' !important;
+    }
+}
+
+.menu-list{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.menu-card-item{
+    text-align: left;
+    display: inline-block;
+    font-size: 1.1em;
+    .ingredrients {
+        color:#666;
+    }
+    .price {
+        background-color: #000;
+        color: #fff;
+        display: inline-block;
+        margin-top: 8px;
+        padding: 2px 4px;
+        transform: rotate(5deg);
+    }
 }
