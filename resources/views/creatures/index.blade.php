@@ -58,8 +58,8 @@
         <table class="table table-bordered">
             <tr>
                 <th>Name</th>
-                <th>Type</th>
                 <th>Size</th>
+                <th>Type</th>
                 <th>Alignment</th>
                 @if($action == "review")
                     <th>Status</th>
